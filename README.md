@@ -22,7 +22,7 @@ composer install
 
 ### 3. Configure MAMP
 - Start MAMP and open the MAMP Preferences.
-- Set the Document Root to the directory where your project is located (e.g., /path/to/yourprojectname/web if Drupal's root is in the web/ subdirectory).
+- Set the Document Root to the `web/` folder where this repo was cloned (e.g., `/path/to/magnum-conosrtium/web`).
 - Ensure the PHP version matches the project requirements.
 - Start the servers.
 
