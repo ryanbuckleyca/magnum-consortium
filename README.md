@@ -35,3 +35,6 @@ composer install
 
 ### 6. Install Drupal
 Navigate to your site in a web browser (usually http://localhost:8888 for MAMP). Follow the Drupal installation steps. When prompted, use the database credentials and name of the database you created earlier.
+
+### 7. Restore from Backup
+If you want to load the latest database changes, navigate to http://localhost:8888/admin/modules and ensure that **Backup and Migrate** is enabled. Then go to http://localhost:8888/admin/config/development/backup_migrate/restore and Upload a Backup File, choosing the most recent mysql.gz file from the repo's `backup/` folder.
