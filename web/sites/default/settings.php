@@ -711,6 +711,8 @@ $settings['update_free_access'] = FALSE;
 # $config['system.site']['name'] = 'My Drupal site';
 # $config['user.settings']['anonymous'] = 'Visitor';
 
+$config['system.logging']['error_level'] = "verbose";
+
 /**
  * Load services definition file.
  */
@@ -885,16 +887,19 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
 #   include $app_root . '/' . $site_path . '/settings.local.php';
 # }
-$databases['default']['default'] = array (
-  'database' => 'magnumco_d10',
-  'username' => 'root',
-  'password' => 'root',
-  'prefix' => '',
-  'host' => 'localhost',
-  'port' => '3306',
-  'isolation_level' => 'READ COMMITTED',
+$databases['default']['default'] = [
+  'database' => getenv('DB_DATABASE'),
+  'username' => getenv('DB_USER'),
+  'password' => getenv('DB_PASSWORD'),
+  'host' => getenv('DB_HOST'),
+  'port' => getenv('DB_PORT'),
   'driver' => 'mysql',
-  'namespace' => 'Drupal\\mysql\\Driver\\Database\\mysql',
-  'autoload' => 'core/modules/mysql/src/Driver/Database/mysql/',
-);
+  'prefix' => '',
+];
 $settings['config_sync_directory'] = 'sites/default/files/config_ViZzk46vgY74V_4U4xVjTyyKOakxyl_O5WwKmHldpU9LfGBa1z-A8yoSjsnCo239sOpQvLFv3Q/sync';
+
+// Automatically generated include for settings managed by ddev.
+$ddev_settings = __DIR__ . '/settings.ddev.php';
+if (getenv('IS_DDEV_PROJECT') == 'true' && is_readable($ddev_settings)) {
+  require $ddev_settings;
+}
