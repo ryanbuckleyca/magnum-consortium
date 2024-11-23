@@ -1,11 +1,12 @@
-# fly.toml app configuration file generated for magnum-consortium on 2024-11-23T17:45:51-05:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
+# fly.toml app configuration file for magnum-consortium
 app = "magnum-consortium"
 primary_region = "yul"
 
+# Build section to use the Dockerfile in your project
+[build]
+  dockerfile = "Dockerfile"
+
+# HTTP service configuration
 [http_service]
   internal_port = 80
   force_https = true
