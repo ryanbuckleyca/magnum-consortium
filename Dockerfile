@@ -1,9 +1,11 @@
 # Use an official PHP image with Apache, compatible with Drupal 10
 FROM php:8.2-apache
 
-# Install required PHP extensions
+# Install required system packages and PHP extensions
 RUN apt-get update && apt-get install -y \
     unzip \
+    curl \
+    git \
     libpng-dev \
     libjpeg-dev \
     libzip-dev \
@@ -12,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install gd mysqli pdo pdo_mysql zip opcache \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Composer globally
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set the working directory
 WORKDIR /var/www/html
