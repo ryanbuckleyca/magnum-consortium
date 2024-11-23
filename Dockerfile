@@ -1,22 +1,29 @@
-# Use a lightweight PHP image with Apache
+# Use a PHP base image with Apache
 FROM php:8.2-apache
 
-# Install the required PHP extensions for Drupal
+# Install necessary system dependencies
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libzip-dev unzip mariadb-client && \
+    unzip \
+    libpng-dev libjpeg-dev libzip-dev mariadb-client && \
     docker-php-ext-configure gd --with-jpeg && \
-    docker-php-ext-install gd mysqli pdo pdo_mysql zip opcache && \
+    docker-php-ext-install gd pdo pdo_mysql zip && \
     a2enmod rewrite && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy Drupal files to the web server's root
-COPY web/ /var/www/html/
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set permissions for Drupal's files directory
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+# Copy project files
+COPY . /var/www/html
 
-# Expose port 80 for the web server
+# Set working directory
+WORKDIR /var/www/html
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
+
+# Expose port 80
 EXPOSE 80
 
-# Run the Apache server
+# Start Apache
 CMD ["apache2-foreground"]
