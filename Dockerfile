@@ -1,29 +1,26 @@
-# Use a PHP base image with Apache
-FROM php:8.2-apache
+# Use the DDEV webserver as the base image
+FROM drud/ddev-webserver:v1.22.1
 
-# Install necessary system dependencies
-RUN apt-get update && apt-get install -y \
-    unzip \
-    libpng-dev libjpeg-dev libzip-dev mariadb-client && \
-    docker-php-ext-configure gd --with-jpeg && \
-    docker-php-ext-install gd pdo pdo_mysql zip && \
-    a2enmod rewrite && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Copy project files
-COPY . /var/www/html
-
-# Set working directory
+# Set the working directory
 WORKDIR /var/www/html
 
-# Install PHP dependencies
+# Copy the Drupal project files into the container
+COPY . .
+
+# Install production dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Expose port 80
+# Ensure proper permissions for files directory
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+
+# Set up Apache with Drupal's document root
+RUN echo "DocumentRoot /var/www/html/web" > /etc/apache2/sites-available/000-default.conf
+
+# Enable Apache rewrite module
+RUN a2enmod rewrite
+
+# Expose port 80 for HTTP traffic
 EXPOSE 80
 
-# Start Apache
+# Start the Apache server
 CMD ["apache2-foreground"]
